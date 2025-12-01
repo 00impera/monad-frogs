@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monad Frogs NFT Collection</title>
-    <!-- Orbitron font for mechanic/tech look -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,322 +12,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@web3auth/base@8.0.0/dist/base.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@web3auth/ethereum-provider@8.0.0/dist/ethereumProvider.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #000 0%, #0a3d0a 60%, #00ff41 100%);
-            min-height: 100vh;
-            color: #00ff41;
-            padding: 10px;
-            padding-bottom: 80px;
-            letter-spacing: 0.5px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
-            padding: 20px;
-            border-radius: 20px;
-            border: 2.5px solid #00ff41;
-            box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset;
-            position: relative;
-        }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px #00ff41, 0 0 5px #000;
-            background: linear-gradient(45deg, #00ff41, #00FFEf);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            letter-spacing: 2px;
-        }
-
-        @media (min-width: 768px) {
-            h1 { font-size: 3.5em; }
-        }
-
-        .subtitle {
-            font-size: 1em;
-            color: #00ff41;
-            margin-bottom: 10px;
-            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .telegram-badge {
-            display: inline-block;
-            background: #0088cc;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-
-        .magiceden-btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #00ff41 0%, #111 100%);
-            color: #000;
-            font-weight: bold;
-            border: 2px solid #00ff41;
-            border-radius: 10px;
-            padding: 12px 28px;
-            font-size: 1.1em;
-            text-decoration: none;
-            box-shadow: 0 0 15px #00ff41;
-            transition: background 0.2s, color 0.2s;
-            margin-top: 18px;
-        }
-        .magiceden-btn:hover {
-            background: #00ff41;
-            color: #111;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
-            padding: 15px;
-            border-radius: 12px;
-            border: 2.5px solid #00ff41;
-            box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #00ff41;
-            text-shadow: 0 0 10px #00ff41, 0 0 2px #000;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .stat-label {
-            font-size: 0.85em;
-            color: #aaa;
-            margin-top: 5px;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .buy-section {
-            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
-            padding: 25px;
-            border-radius: 20px;
-            border: 2.5px solid #00ff41;
-            margin-bottom: 30px;
-            box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset;
-        }
-
-        .wallet-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.1em;
-            background: linear-gradient(45deg, #00ff41, #00FFEf);
-            color: #000;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px #00ff41;
-            margin: 5px;
-            width: 100%;
-            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        button:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .metamask-btn {
-            background: linear-gradient(45deg, #f6851b, #e2761b);
-        }
-
-        .social-btn {
-            background: linear-gradient(45deg, #4285f4, #34a853);
-        }
-
-        .disconnect-btn {
-            background: linear-gradient(45deg, #ff0000, #ff4444);
-            font-size: 0.9em;
-            padding: 10px 20px;
-        }
-
-        .wallet-section {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .wallet-address {
-            color: #00ff41;
-            font-family: monospace;
-            margin: 15px 0;
-            font-size: 0.9em;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            border: 1.5px solid #00ff41;
-        }
-
-        .user-info {
-            background: rgba(0, 255, 65, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            border: 1.5px solid #00ff41;
-        }
-
-        .buy-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .buy-controls {
-                flex-direction: row;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-        }
-
-        input[type="number"] {
-            padding: 15px;
-            font-size: 1.2em;
-            width: 100%;
-            max-width: 120px;
-            border: 2px solid #00ff41;
-            border-radius: 10px;
-            background: rgba(0, 255, 65, 0.1);
-            color: #00ff41;
-            text-align: center;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .price-display {
-            font-size: 1.3em;
-            color: #00ff41;
-            text-shadow: 0 0 10px #00ff41;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .status-message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .success {
-            background: rgba(0, 255, 65, 0.2);
-            border: 2px solid #00ff41;
-            color: #00ff41;
-        }
-
-        .error {
-            background: rgba(255, 0, 0, 0.2);
-            border: 2px solid #ff0000;
-            color: #ff0000;
-        }
-
-        .loading {
-            background: rgba(255, 215, 0, 0.2);
-            border: 2px solid #FFD700;
-            color: #FFD700;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset; }
-            50% { box-shadow: 0 0 40px #00ff41, 0 0 20px #222 inset; }
-        }
-
-        .glow-effect {
-            animation: glow 2s infinite;
-        }
-
-        .variants-section {
-            margin-top: 30px;
-        }
-
-        .variants-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .variant-card {
-            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
-            padding: 15px;
-            border-radius: 15px;
-            border: 2.5px solid;
-            text-align: center;
-            font-size: 0.9em;
-            box-shadow: 0 0 10px #00ff41, 0 0 5px #222 inset;
-        }
-
-        .variant-name {
-            font-size: 1em;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .login-methods {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .method-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            margin: 2px;
-        }
-
-        .web3auth-badge {
-            background: #0364ff;
-        }
-
-        .metamask-badge {
-            background: #f6851b;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Orbitron', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #000 0%, #0a3d0a 60%, #00ff41 100%); min-height: 100vh; color: #00ff41; padding: 10px; padding-bottom: 80px; letter-spacing: 0.5px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 20px; background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 20px; border-radius: 20px; border: 2.5px solid #00ff41; box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset; }
+        h1 { font-size: 2em; margin-bottom: 10px; text-shadow: 0 0 20px #00ff41, 0 0 5px #000; background: linear-gradient(45deg, #00ff41, #00FFEf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+        @media (min-width: 768px) { h1 { font-size: 3.5em; } }
+        .subtitle { font-size: 1em; color: #00ff41; margin-bottom: 10px; }
+        .telegram-badge { display: inline-block; background: #0088cc; color: white; padding: 8px 15px; border-radius: 20px; margin-top: 10px; font-size: 0.9em; }
+        .magiceden-btn { display: inline-block; background: linear-gradient(90deg, #00ff41 0%, #111 100%); color: #000; font-weight: bold; border: 2px solid #00ff41; border-radius: 10px; padding: 12px 28px; font-size: 1.1em; text-decoration: none; box-shadow: 0 0 15px #00ff41; transition: 0.2s; margin-top: 18px; }
+        .magiceden-btn:hover { background: #00ff41; color: #111; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #00ff41; box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset; text-align: center; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #00ff41; text-shadow: 0 0 10px #00ff41; font-family: 'Orbitron', monospace; }
+        .stat-label { font-size: 0.85em; color: #aaa; margin-top: 5px; }
+        .buy-section { background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 25px; border-radius: 20px; border: 2.5px solid #00ff41; margin-bottom: 30px; box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset; }
+        .wallet-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
+        button { padding: 15px 30px; font-size: 1.1em; background: linear-gradient(45deg, #00ff41, #00FFEf); color: #000; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 0 20px #00ff41; margin: 5px; width: 100%; font-family: 'Orbitron', sans-serif; }
+        button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .metamask-btn { background: linear-gradient(45deg, #f6851b, #e2761b); }
+        .social-btn { background: linear-gradient(45deg, #4285f4, #34a853); }
+        .disconnect-btn { background: linear-gradient(45deg, #ff0000, #ff4444); font-size: 0.9em; padding: 10px 20px; }
+        .wallet-section { text-align: center; margin-bottom: 20px; }
+        .wallet-address { color: #00ff41; font-family: monospace; margin: 15px 0; font-size: 0.9em; padding: 10px; background: rgba(0, 0, 0, 0.3); border-radius: 10px; border: 1.5px solid #00ff41; }
+        .user-info { background: rgba(0, 255, 65, 0.1); padding: 15px; border-radius: 10px; margin: 10px 0; border: 1.5px solid #00ff41; }
+        .buy-controls { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; }
+        @media (min-width: 768px) { .buy-controls { flex-direction: row; justify-content: center; flex-wrap: wrap; } }
+        input[type="number"] { padding: 15px; font-size: 1.2em; width: 100%; max-width: 120px; border: 2px solid #00ff41; border-radius: 10px; background: rgba(0, 255, 65, 0.1); color: #00ff41; text-align: center; font-family: 'Orbitron', monospace; }
+        .price-display { font-size: 1.3em; color: #00ff41; text-shadow: 0 0 10px #00ff41; font-family: 'Orbitron', monospace; }
+        .status-message { margin-top: 20px; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; }
+        .success { background: rgba(0, 255, 65, 0.2); border: 2px solid #00ff41; color: #00ff41; }
+        .error { background: rgba(255, 0, 0, 0.2); border: 2px solid #ff0000; color: #ff0000; }
+        .loading { background: rgba(255, 215, 0, 0.2); border: 2px solid #FFD700; color: #FFD700; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset; } 50% { box-shadow: 0 0 40px #00ff41, 0 0 20px #222 inset; } }
+        .glow-effect { animation: glow 2s infinite; }
+        .variants-section { margin-top: 30px; }
+        .variants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .variant-card { background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 15px; border-radius: 15px; border: 2.5px solid; text-align: center; font-size: 0.9em; box-shadow: 0 0 10px #00ff41, 0 0 5px #222 inset; }
+        .variant-name { font-size: 1em; font-weight: bold; margin-bottom: 8px; }
+        .method-badge { display: inline-block; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; margin: 2px; }
+        .web3auth-badge { background: #0364ff; }
+        .metamask-badge { background: #f6851b; }
     </style>
 </head>
 <body>
@@ -337,482 +63,246 @@
             <p class="subtitle">Matrix Green Edition</p>
             <p style="color: #aaa; font-size: 0.9em;">799 Available | 1000 MON Each</p>
             <div id="telegramInfo"></div>
-            <div>
-                <a href="https://magiceden.io/u/LEGO1" target="_blank" class="magiceden-btn">
-                    <img src="https://magiceden.io/static/media/logo.7c6b6e2e.svg" alt="Magic Eden" style="height:24px;vertical-align:middle;margin-right:8px;">
-                    View My NFTs on Magic Eden
-                </a>
+            <div style="margin: 18px 0;">
+                <!-- Telegram Login Widget will render here -->
             </div>
+            <div id="telegramUserInfo"></div>
+            <a href="https://magiceden.io/u/LEGO1" target="_blank" class="magiceden-btn">View My NFTs on Magic Eden</a>
         </header>
 
         <div class="dashboard">
-            <div class="stat-card glow-effect">
-                <div class="stat-value" id="availableCount">799</div>
-                <div class="stat-label">Available</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">1000</div>
-                <div class="stat-label">MON/NFT</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">900</div>
-                <div class="stat-label">Supply</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="yourBalance">0</div>
-                <div class="stat-label">Your MON</div>
-            </div>
+            <div class="stat-card glow-effect"><div class="stat-value" id="availableCount">799</div><div class="stat-label">Available</div></div>
+            <div class="stat-card"><div class="stat-value">1000</div><div class="stat-label">MON/NFT</div></div>
+            <div class="stat-card"><div class="stat-value">900</div><div class="stat-label">Supply</div></div>
+            <div class="stat-card"><div class="stat-value" id="yourBalance">0</div><div class="stat-label">Your MON</div></div>
         </div>
 
         <div class="buy-section">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41; font-family: 'Orbitron', monospace;">💰 Connect & Buy</h2>
-            
+            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41;">💰 Connect & Buy</h2>
             <div class="wallet-section">
                 <div id="loginSection">
                     <p style="margin-bottom: 15px; color: #aaa;">Choose your connection method:</p>
                     <div class="wallet-options">
-                        <button class="social-btn" onclick="connectWeb3Auth()">
-                            🌐 Login with Social
-                            <div style="font-size: 0.8em; margin-top: 5px;">Google, Twitter, Discord & More</div>
-                        </button>
-                        <button class="metamask-btn" onclick="connectMetaMask()">
-                            🦊 Connect MetaMask
-                            <div style="font-size: 0.8em; margin-top: 5px;">Traditional Wallet</div>
-                        </button>
+                        <button class="social-btn" id="socialLoginBtn" onclick="connectWeb3Auth()" disabled>🌐 Login with Social<div style="font-size: 0.8em; margin-top: 5px;">Initializing...</div></button>
+                        <button class="metamask-btn" onclick="connectMetaMask()">🦊 Connect MetaMask<div style="font-size: 0.8em; margin-top: 5px;">Traditional Wallet</div></button>
                     </div>
                 </div>
-
                 <div id="walletInfo" style="display: none;">
                     <div class="user-info" id="userInfoDisplay"></div>
-                    <div class="wallet-address">
-                        <strong>Wallet:</strong> <span id="walletAddress"></span>
-                        <br>
-                        <span class="method-badge" id="methodBadge"></span>
-                    </div>
+                    <div class="wallet-address"><strong>Wallet:</strong> <span id="walletAddress"></span><br><span class="method-badge" id="methodBadge"></span></div>
                     <button class="disconnect-btn" onclick="disconnect()">Disconnect</button>
                 </div>
             </div>
-
             <div class="buy-controls" id="buyControls" style="display: none;">
                 <label style="color: #00ff41; font-size: 1.1em;">Quantity:</label>
-                <input type="number" id="quantity" value="1" min="1" max="10" onchange="updatePrice()">
+                <input type="number" id="quantity" value="1" min="1" max="10" onchange="updatePrice()" oninput="updatePrice()">
                 <button onclick="buyNFTs()">🛒 Buy Now</button>
-                <div class="price-display">
-                    Total: <span id="totalPrice">1000</span> MON
-                </div>
+                <div class="price-display">Total: <span id="totalPrice">1000</span> MON</div>
             </div>
-
             <div id="statusMessage"></div>
         </div>
 
         <div class="variants-section">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41; font-family: 'Orbitron', monospace;">🎨 Frog Variants</h2>
+            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41;">🎨 Frog Variants</h2>
             <div class="variants-grid">
-                <div class="variant-card" style="border-color: #00FFEF;">
-                    <div class="variant-name" style="color: #00FFEF;">Electric Cyan</div>
-                    <div>⚡⚡⚡⚡⚡</div>
-                </div>
-                <div class="variant-card" style="border-color: #FFD700;">
-                    <div class="variant-name" style="color: #FFD700;">Laser Gold</div>
-                    <div>💰💰💰💰💰</div>
-                </div>
-                <div class="variant-card" style="border-color: #FF10F0;">
-                    <div class="variant-name" style="color: #FF10F0;">Neon Pink</div>
-                    <div>🎉🎉🎉🎉🎉</div>
-                </div>
-                <div class="variant-card" style="border-color: #666;">
-                    <div class="variant-name" style="color: #fff;">Void Black</div>
-                    <div>🌑🌑🌑🌑🌑</div>
-                </div>
-                <div class="variant-card" style="border-color: #9D00FF;">
-                    <div class="variant-name" style="color: #9D00FF;">Plasma Purple</div>
-                    <div>🔮🔮🔮🔮🔮</div>
-                </div>
-                <div class="variant-card" style="border-color: #F7931A;">
-                    <div class="variant-name" style="color: #F7931A;">Bitcoin Orange</div>
-                    <div>₿₿₿₿₿</div>
-                </div>
-                <div class="variant-card glow-effect" style="border-color: #00ff41;">
-                    <div class="variant-name" style="color: #00ff41;">Matrix Green</div>
-                    <div>💻💻💻💻💻</div>
-                </div>
-                <div class="variant-card" style="border-color: #FFFFFF;">
-                    <div class="variant-name" style="color: #FFFFFF;">Diamond White</div>
-                    <div>💎💎💎💎💎</div>
-                </div>
+                <div class="variant-card" style="border-color: #00FFEF;"><div class="variant-name" style="color: #00FFEF;">Electric Cyan</div><div>⚡⚡⚡⚡⚡</div></div>
+                <div class="variant-card" style="border-color: #FFD700;"><div class="variant-name" style="color: #FFD700;">Laser Gold</div><div>💰💰💰💰💰</div></div>
+                <div class="variant-card" style="border-color: #FF10F0;"><div class="variant-name" style="color: #FF10F0;">Neon Pink</div><div>🎉🎉🎉🎉🎉</div></div>
+                <div class="variant-card" style="border-color: #666;"><div class="variant-name" style="color: #fff;">Void Black</div><div>🌑🌑🌑🌑🌑</div></div>
+                <div class="variant-card" style="border-color: #9D00FF;"><div class="variant-name" style="color: #9D00FF;">Plasma Purple</div><div>🔮🔮🔮🔮🔮</div></div>
+                <div class="variant-card" style="border-color: #F7931A;"><div class="variant-name" style="color: #F7931A;">Bitcoin Orange</div><div>₿₿₿₿₿</div></div>
+                <div class="variant-card glow-effect" style="border-color: #00ff41;"><div class="variant-name" style="color: #00ff41;">Matrix Green</div><div>💻💻💻💻💻</div></div>
+                <div class="variant-card" style="border-color: #FFFFFF;"><div class="variant-name" style="color: #FFFFFF;">Diamond White</div><div>💎💎💎💎💎</div></div>
             </div>
         </div>
     </div>
 
+    <!-- Telegram Login Widget -->
+    <script async src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="MonadFrogsNFT_bot"
+        data-size="large"
+        data-userpic="true"
+        data-request-access="write"
+        data-auth-url="https://00impera.github.io/monad-frogs/auth/telegram"
+        data-lang="en"></script>
+
     <script>
-        const SALE_CONTRACT = "0x1a02064d88631C5eFbd93f026944B5AD5adF0f9c";
-        const NFT_CONTRACT = "0xFAFAd78D9483E0f7D354de8782967e036aE78d4F";
-        const CHAIN_ID = 143;
-        const CHAIN_ID_HEX = '0x8f';
-        const RPC_URL = "https://rpc.monad.xyz";
+        (function() {
+            const SALE_CONTRACT = "0x1a02064d88631C5eFbd93f026944B5AD5adF0f9c";
+            const CHAIN_ID = 143, CHAIN_ID_HEX = '0x8f', RPC_URL = "https://rpc.monad.xyz";
+            const WEB3AUTH_CLIENT_ID = "BHT1E0utBf7EE5W6ya5N8urmASwrqNUwXOyHFkNamE4xX1fUs3p7SqSE37gBSAEYiN_jJ-D-wc5m1Cw1VX--qZo";
+            let provider, signer, userAddress, web3auth = null, connectionMethod = null, isTelegramWebApp = false, userInfo = null;
+            const SALE_ABI = ["function buyNFT() payable", "function buyMultipleNFTs(uint256 count) payable", "function getAvailableCount() view returns (uint256)", "function pricePerNFT() view returns (uint256)"];
 
-        // Web3Auth Configuration
-        const WEB3AUTH_CLIENT_ID = "BHT1E0utBf7EE5W6ya5N8urmASwrqNUwXOyHFkNamE4xX1fUs3p7SqSE37gBSAEYiN_jJ-D-wc5m1Cw1VX--qZo";
-        
-        let provider;
-        let signer;
-        let userAddress;
-        let web3auth = null;
-        let connectionMethod = null; // 'web3auth' or 'metamask'
-        let isTelegramWebApp = false;
-        let userInfo = null;
-
-        const SALE_ABI = [
-            "function buyNFT() payable",
-            "function buyMultipleNFTs(uint256 count) payable",
-            "function getAvailableCount() view returns (uint256)",
-            "function pricePerNFT() view returns (uint256)"
-        ];
-
-        // Initialize Web3Auth
-        async function initWeb3Auth() {
-            try {
-                const { Web3Auth } = window.Web3auth;
-                const { CHAIN_NAMESPACES } = window.Web3authBase;
-                const { EthereumPrivateKeyProvider } = window.EthereumProvider;
-
-                const chainConfig = {
-                    chainNamespace: CHAIN_NAMESPACES.EIP155,
-                    chainId: CHAIN_ID_HEX,
-                    rpcTarget: RPC_URL,
-                    displayName: "Monad",
-                    blockExplorerUrl: "https://explorer.monad.xyz",
-                    ticker: "MON",
-                    tickerName: "Monad",
-                    logo: "https://00impera.github.io/monad-frogs/logo.png"
-                };
-
-                const privateKeyProvider = new EthereumPrivateKeyProvider({
-                    config: { chainConfig }
-                });
-
-                web3auth = new Web3Auth({
-                    clientId: WEB3AUTH_CLIENT_ID,
-                    web3AuthNetwork: "sapphire_mainnet",
-                    chainConfig,
-                    privateKeyProvider,
-                    uiConfig: {
-                        appName: "Monad Frogs NFT",
-                        theme: {
-                            primary: "#00ff41"
-                        },
-                        mode: "dark",
-                        logoLight: "https://00impera.github.io/monad-frogs/logo.png",
-                        logoDark: "https://00impera.github.io/monad-frogs/logo.png",
-                        defaultLanguage: "en",
-                        loginMethodsOrder: ["google", "twitter", "discord", "facebook"]
-                    }
-                });
-
-                await web3auth.initModal();
-                console.log('Web3Auth initialized');
-
-                // Check if already connected
-                if (web3auth.connected) {
-                    await handleWeb3AuthConnection();
-                }
-            } catch (error) {
-                console.error('Web3Auth init error:', error);
-            }
-        }
-
-        // Connect with Web3Auth (Social Login)
-        async function connectWeb3Auth() {
-            try {
-                if (!web3auth) {
-                    showStatus('⏳ Initializing Web3Auth...', 'loading');
-                    await initWeb3Auth();
-                }
-
-                showStatus('🔐 Opening login...', 'loading');
-                
-                const web3authProvider = await web3auth.connect();
-                
-                if (!web3authProvider) {
-                    throw new Error('Connection failed');
-                }
-
-                await handleWeb3AuthConnection();
-
-            } catch (error) {
-                console.error('Web3Auth connection error:', error);
-                if (error.message !== 'User closed the modal') {
-                    showStatus('❌ Login failed: ' + (error.message || 'Unknown error'), 'error');
-                }
-            }
-        }
-
-        async function handleWeb3AuthConnection() {
-            try {
-                provider = new ethers.providers.Web3Provider(web3auth.provider);
-                signer = provider.getSigner();
-                userAddress = await signer.getAddress();
-                connectionMethod = 'web3auth';
-
-                // Get user info
-                userInfo = await web3auth.getUserInfo();
-
-                updateUIAfterConnection();
-                showStatus('✅ Connected via ' + (userInfo.name || 'Social Login') + '!', 'success');
-                await updateDashboard();
-
-            } catch (error) {
-                console.error('Handle connection error:', error);
-                showStatus('❌ Connection handling failed', 'error');
-            }
-        }
-
-        // Connect with MetaMask
-        async function connectMetaMask() {
-            try {
-                if (typeof window.ethereum === 'undefined') {
-                    showStatus('❌ MetaMask not found! Install MetaMask extension.', 'error');
-                    setTimeout(() => window.open('https://metamask.io/download/', '_blank'), 2000);
-                    return;
-                }
-
-                showStatus('🔗 Connecting MetaMask...', 'loading');
-
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-
-                const network = await provider.getNetwork();
-                if (network.chainId !== CHAIN_ID) {
-                    await switchToMonadNetwork();
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                }
-
-                signer = provider.getSigner();
-                userAddress = await signer.getAddress();
-                connectionMethod = 'metamask';
-
-                updateUIAfterConnection();
-                showStatus('✅ MetaMask connected!', 'success');
-                await updateDashboard();
-
-            } catch (error) {
-                console.error('MetaMask error:', error);
-                handleError(error, 'connect MetaMask');
-            }
-        }
-
-        function updateUIAfterConnection() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('walletInfo').style.display = 'block';
-            document.getElementById('buyControls').style.display = 'flex';
-            
-            document.getElementById('walletAddress').textContent = 
-                userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
-
-            // Update user info display
-            let userInfoHtml = '';
-            if (connectionMethod === 'web3auth' && userInfo) {
-                userInfoHtml = `
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        ${userInfo.profileImage ? `<img src="${userInfo.profileImage}" style="width: 40px; height: 40px; border-radius: 50%;">` : ''}
-                        <div>
-                            <div><strong>${userInfo.name || 'User'}</strong></div>
-                            <div style="font-size: 0.8em; color: #aaa;">${userInfo.email || ''}</div>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('methodBadge').className = 'method-badge web3auth-badge';
-                document.getElementById('methodBadge').textContent = '🌐 Social Login';
-            } else {
-                userInfoHtml = '<div><strong>Connected</strong></div>';
-                document.getElementById('methodBadge').className = 'method-badge metamask-badge';
-                document.getElementById('methodBadge').textContent = '🦊 MetaMask';
-            }
-            
-            document.getElementById('userInfoDisplay').innerHTML = userInfoHtml;
-        }
-
-        async function disconnect() {
-            try {
-                if (connectionMethod === 'web3auth' && web3auth && web3auth.connected) {
-                    await web3auth.logout();
-                }
-                
-                provider = null;
-                signer = null;
-                userAddress = null;
-                connectionMethod = null;
-                userInfo = null;
-
-                document.getElementById('loginSection').style.display = 'block';
-                document.getElementById('walletInfo').style.display = 'none';
-                document.getElementById('buyControls').style.display = 'none';
-                document.getElementById('yourBalance').textContent = '0';
-                
-                showStatus('👋 Disconnected', 'success');
-            } catch (error) {
-                console.error('Disconnect error:', error);
-            }
-        }
-
-        async function switchToMonadNetwork() {
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: CHAIN_ID_HEX }],
-                });
-            } catch (switchError) {
-                if (switchError.code === 4902) {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: CHAIN_ID_HEX,
-                            chainName: 'Monad',
-                            rpcUrls: [RPC_URL],
-                            nativeCurrency: {
-                                name: 'MON',
-                                symbol: 'MON',
-                                decimals: 18
-                            },
-                            blockExplorerUrls: ['https://explorer.monad.xyz']
-                        }]
-                    });
-                } else {
-                    throw switchError;
-                }
-            }
-        }
-
-        async function updateDashboard() {
-            try {
-                const rpcProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
-                const contract = new ethers.Contract(SALE_CONTRACT, SALE_ABI, rpcProvider);
-                
+            async function initWeb3Auth() {
                 try {
-                    const available = await contract.getAvailableCount();
-                    document.getElementById('availableCount').textContent = available.toString();
-                } catch (err) {
-                    console.log('Using default available count');
-                }
-
-                if (signer && userAddress) {
-                    const balance = await provider.getBalance(userAddress);
-                    const balanceInMon = parseFloat(ethers.utils.formatEther(balance)).toFixed(2);
-                    document.getElementById('yourBalance').textContent = balanceInMon;
-                }
-            } catch (error) {
-                console.log('Dashboard update skipped:', error.message);
-            }
-        }
-
-        function updatePrice() {
-            const quantity = document.getElementById('quantity').value;
-            const total = quantity * 1000;
-            document.getElementById('totalPrice').textContent = total;
-        }
-
-        async function buyNFTs() {
-            if (!signer) {
-                showStatus('❌ Connect wallet first!', 'error');
-                return;
+                    const { Web3Auth } = window.Web3auth, { CHAIN_NAMESPACES } = window.Web3authBase, { EthereumPrivateKeyProvider } = window.EthereumProvider;
+                    const chainConfig = { chainNamespace: CHAIN_NAMESPACES.EIP155, chainId: CHAIN_ID_HEX, rpcTarget: RPC_URL, displayName: "Monad", blockExplorerUrl: "https://explorer.monad.xyz", ticker: "MON", tickerName: "Monad", logo: "https://00impera.github.io/monad-frogs/logo.png" };
+                    const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
+                    web3auth = new Web3Auth({ clientId: WEB3AUTH_CLIENT_ID, web3AuthNetwork: "sapphire_mainnet", chainConfig, privateKeyProvider, uiConfig: { appName: "Monad Frogs NFT", theme: { primary: "#00ff41" }, mode: "dark", logoLight: "https://00impera.github.io/monad-frogs/logo.png", logoDark: "https://00impera.github.io/monad-frogs/logo.png", defaultLanguage: "en", loginMethodsOrder: ["google", "twitter", "discord", "facebook"] } });
+                    await web3auth.initModal();
+                    const btn = document.getElementById('socialLoginBtn');
+                    btn.disabled = false;
+                    btn.querySelector('div').textContent = 'Google, Twitter, Discord & More';
+                    if (web3auth.connected) await handleWeb3AuthConnection();
+                } catch (e) { console.error('Web3Auth init:', e); showStatus('⚠️ Social login unavailable', 'error'); }
             }
 
-            try {
-                const quantity = parseInt(document.getElementById('quantity').value);
-                if (quantity < 1 || quantity > 10) {
-                    showStatus('❌ Quantity: 1-10 only', 'error');
-                    return;
-                }
+            async function connectWeb3Auth() {
+                try {
+                    if (!web3auth) { showStatus('⏳ Initializing...', 'loading'); await initWeb3Auth(); }
+                    showStatus('🔐 Opening login...', 'loading');
+                    const p = await web3auth.connect();
+                    if (!p) throw new Error('Connection failed');
+                    await handleWeb3AuthConnection();
+                } catch (e) { console.error('Web3Auth connect:', e); if (e.message !== 'User closed the modal') showStatus('❌ Login failed: ' + (e.message || 'Unknown'), 'error'); }
+            }
 
-                showStatus('📝 Preparing purchase...', 'loading');
+            async function handleWeb3AuthConnection() {
+                try {
+                    provider = new ethers.providers.Web3Provider(web3auth.provider);
+                    signer = provider.getSigner();
+                    userAddress = await signer.getAddress();
+                    connectionMethod = 'web3auth';
+                    userInfo = await web3auth.getUserInfo();
+                    updateUIAfterConnection();
+                    showStatus('✅ Connected via ' + (userInfo.name || 'Social Login'), 'success');
+                    await updateDashboard();
+                } catch (e) { console.error('Handle connection:', e); showStatus('❌ Connection failed', 'error'); }
+            }
 
-                const contract = new ethers.Contract(SALE_CONTRACT, SALE_ABI, signer);
-                const price = ethers.utils.parseEther((quantity * 1000).toString());
+            async function connectMetaMask() {
+                try {
+                    if (typeof window.ethereum === 'undefined') { showStatus('❌ MetaMask not found!', 'error'); setTimeout(() => window.open('https://metamask.io/download/', '_blank'), 2000); return; }
+                    showStatus('🔗 Connecting...', 'loading');
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    const net = await provider.getNetwork();
+                    if (net.chainId !== CHAIN_ID) { await switchToMonadNetwork(); provider = new ethers.providers.Web3Provider(window.ethereum); }
+                    signer = provider.getSigner();
+                    userAddress = await signer.getAddress();
+                    connectionMethod = 'metamask';
+                    updateUIAfterConnection();
+                    showStatus('✅ MetaMask connected!', 'success');
+                    await updateDashboard();
+                } catch (e) { console.error('MetaMask:', e); handleError(e, 'connect'); }
+            }
 
-                let tx;
-                if (quantity === 1) {
-                    tx = await contract.buyNFT({ value: price, gasLimit: 300000 });
+            function updateUIAfterConnection() {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('walletInfo').style.display = 'block';
+                document.getElementById('buyControls').style.display = 'flex';
+                document.getElementById('walletAddress').textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+                let html = '';
+                if (connectionMethod === 'web3auth' && userInfo) {
+                    html = `<div style="display: flex; align-items: center; justify-content: center; gap: 10px;">${userInfo.profileImage ? `<img src="${userInfo.profileImage}" style="width: 40px; height: 40px; border-radius: 50%;">` : ''}<div><div><strong>${userInfo.name || 'User'}</strong></div><div style="font-size: 0.8em; color: #aaa;">${userInfo.email || ''}</div></div></div>`;
+                    document.getElementById('methodBadge').className = 'method-badge web3auth-badge';
+                    document.getElementById('methodBadge').textContent = '🌐 Social Login';
                 } else {
-                    tx = await contract.buyMultipleNFTs(quantity, { value: price, gasLimit: 300000 * quantity });
+                    html = '<div><strong>Connected</strong></div>';
+                    document.getElementById('methodBadge').className = 'method-badge metamask-badge';
+                    document.getElementById('methodBadge').textContent = '🦊 MetaMask';
                 }
+                document.getElementById('userInfoDisplay').innerHTML = html;
+            }
 
-                showStatus('⏳ Confirming... TX: ' + tx.hash.slice(0, 10) + '...', 'loading');
-                await tx.wait();
-                
-                const successMsg = `🎉 Success! Bought ${quantity} Frog${quantity > 1 ? 's' : ''}!`;
-                showStatus(successMsg, 'success');
-                
-                if (isTelegramWebApp) {
-                    window.Telegram.WebApp.showAlert(successMsg);
+            async function disconnect() {
+                try {
+                    if (connectionMethod === 'web3auth' && web3auth && web3auth.connected) await web3auth.logout();
+                    provider = signer = userAddress = connectionMethod = userInfo = null;
+                    document.getElementById('loginSection').style.display = 'block';
+                    document.getElementById('walletInfo').style.display = 'none';
+                    document.getElementById('buyControls').style.display = 'none';
+                    document.getElementById('yourBalance').textContent = '0';
+                    showStatus('👋 Disconnected', 'success');
+                } catch (e) { console.error('Disconnect:', e); }
+            }
+
+            async function switchToMonadNetwork() {
+                try {
+                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: CHAIN_ID_HEX }] });
+                } catch (e) {
+                    if (e.code === 4902) await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [{ chainId: CHAIN_ID_HEX, chainName: 'Monad', rpcUrls: [RPC_URL], nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 }, blockExplorerUrls: ['https://explorer.monad.xyz'] }] });
+                    else throw e;
                 }
-                
-                await updateDashboard();
-
-            } catch (error) {
-                console.error('Buy error:', error);
-                handleError(error, 'purchase');
-            }
-        }
-
-        function handleError(error, action) {
-            let msg = `❌ Failed to ${action}: `;
-            if (error.code === 'INSUFFICIENT_FUNDS') {
-                msg += 'Not enough MON';
-            } else if (error.code === 4001) {
-                msg += 'Rejected by user';
-            } else if (error.message?.includes('execution reverted')) {
-                msg += 'Contract error';
-            } else {
-                msg += error.message?.slice(0, 50) || 'Unknown error';
-            }
-            showStatus(msg, 'error');
-        }
-
-        function showStatus(message, type) {
-            const statusDiv = document.getElementById('statusMessage');
-            statusDiv.textContent = message;
-            statusDiv.className = 'status-message ' + type;
-            statusDiv.style.display = 'block';
-
-            if (type === 'success') {
-                setTimeout(() => statusDiv.style.display = 'none', 5000);
-            }
-        }
-
-        // Initialize on load
-        window.addEventListener('load', async () => {
-            // Check Telegram
-            if (window.Telegram && window.Telegram.WebApp) {
-                isTelegramWebApp = true;
-                const tg = window.Telegram.WebApp;
-                tg.ready();
-                tg.expand();
-                document.getElementById('telegramInfo').innerHTML = 
-                    '<span class="telegram-badge">📱 Telegram App</span>';
             }
 
-            // Initialize Web3Auth
-            await initWeb3Auth();
-            
-            // Update dashboard
-            updateDashboard();
-            setInterval(updateDashboard, 30000);
-        });
-
-        // Handle MetaMask events
-        if (typeof window.ethereum !== 'undefined') {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                if (connectionMethod === 'metamask') {
-                    if (accounts.length === 0) {
-                        disconnect();
-                    } else if (userAddress && accounts[0].toLowerCase() !== userAddress.toLowerCase()) {
-                        connectMetaMask();
+            async function updateDashboard() {
+                try {
+                    const rpc = new ethers.providers.JsonRpcProvider(RPC_URL);
+                    const c = new ethers.Contract(SALE_CONTRACT, SALE_ABI, rpc);
+                    try { const a = await c.getAvailableCount(); document.getElementById('availableCount').textContent = a.toString(); } catch (e) { }
+                    if (signer && userAddress) {
+                        const b = await provider.getBalance(userAddress);
+                        document.getElementById('yourBalance').textContent = parseFloat(ethers.utils.formatEther(b)).toFixed(2);
                     }
+                } catch (e) { console.log('Dashboard skip:', e.message); }
+            }
+
+            function updatePrice() {
+                const q = document.getElementById('quantity').value;
+                document.getElementById('totalPrice').textContent = q * 1000;
+            }
+
+            async function buyNFTs() {
+                if (!signer) { showStatus('❌ Connect wallet first!', 'error'); return; }
+                try {
+                    const q = parseInt(document.getElementById('quantity').value);
+                    if (q < 1 || q > 10) { showStatus('❌ Quantity: 1-10 only', 'error'); return; }
+                    showStatus('📝 Preparing...', 'loading');
+                    const c = new ethers.Contract(SALE_CONTRACT, SALE_ABI, signer);
+                    const p = ethers.utils.parseEther((q * 1000).toString());
+                    let tx = q === 1 ? await c.buyNFT({ value: p, gasLimit: 300000 }) : await c.buyMultipleNFTs(q, { value: p, gasLimit: 300000 * q });
+                    showStatus('⏳ Confirming... TX: ' + tx.hash.slice(0, 10) + '...', 'loading');
+                    await tx.wait();
+                    const msg = `🎉 Success! Bought ${q} Frog${q > 1 ? 's' : ''}!`;
+                    showStatus(msg, 'success');
+                    if (isTelegramWebApp) window.Telegram.WebApp.showAlert(msg);
+                    await updateDashboard();
+                } catch (e) { console.error('Buy:', e); handleError(e, 'purchase'); }
+            }
+
+            function handleError(e, act) {
+                let m = `❌ Failed to ${act}: `;
+                if (e.code === 'INSUFFICIENT_FUNDS') m += 'Not enough MON';
+                else if (e.code === 4001) m += 'Rejected';
+                else if (e.message?.includes('execution reverted')) m += 'Contract error';
+                else m += e.message?.slice(0, 50) || 'Unknown';
+                showStatus(m, 'error');
+            }
+
+            function showStatus(msg, type) {
+                const s = document.getElementById('statusMessage');
+                s.textContent = msg;
+                s.className = 'status-message ' + type;
+                s.style.display = 'block';
+                if (type === 'success') setTimeout(() => s.style.display = 'none', 5000);
+            }
+
+            window.connectWeb3Auth = connectWeb3Auth;
+            window.connectMetaMask = connectMetaMask;
+            window.disconnect = disconnect;
+            window.buyNFTs = buyNFTs;
+            window.updatePrice = updatePrice;
+
+            window.addEventListener('load', async () => {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    isTelegramWebApp = true;
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    document.getElementById('telegramInfo').innerHTML = '<span class="telegram-badge">📱 Telegram App</span>';
                 }
+                await initWeb3Auth();
+                updateDashboard();
+                setInterval(updateDashboard, 30000);
             });
 
-            window.ethereum.on('chainChanged', () => window.location.reload());
-        }
+            if (typeof window.ethereum !== 'undefined') {
+                window.ethereum.on('accountsChanged', (a) => { if (connectionMethod === 'metamask') { if (a.length === 0) disconnect(); else if (userAddress && a[0].toLowerCase() !== userAddress.toLowerCase()) connectMetaMask(); } });
+                window.ethereum.on('chainChanged', () => window.location.reload());
+            }
+        })();
     </script>
 </body>
 </html>

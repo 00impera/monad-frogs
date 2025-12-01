@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,25 +7,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@web3auth/modal@8.0.0/dist/modal.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@web3auth/base@8.0.0/dist/base.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@web3auth/ethereum-provider@8.0.0/dist/ethereumProvider.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@web3auth/modal@9.3.0/dist/modal.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@web3auth/base@9.3.0/dist/base.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@web3auth/ethereum-provider@9.3.0/dist/ethereumProvider.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@web3auth/openlogin-adapter@9.3.0/dist/openloginAdapter.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Orbitron', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #000 0%, #0a3d0a 60%, #00ff41 100%); min-height: 100vh; color: #00ff41; padding: 10px; padding-bottom: 80px; letter-spacing: 0.5px; }
         .container { max-width: 1400px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 20px; background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 20px; border-radius: 20px; border: 2.5px solid #00ff41; box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset; }
+        header { text-align: center; margin-bottom: 20px; background: #000; padding: 20px; border-radius: 20px; border: 2.5px solid #00ff41; box-shadow: 0 0 30px rgba(0, 255, 65, 0.4), inset 0 0 20px rgba(0, 255, 65, 0.05); position: relative; overflow: hidden; }
+        header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.05), transparent); transform: rotate(45deg); animation: shine 4s infinite; pointer-events: none; }
         h1 { font-size: 2em; margin-bottom: 10px; text-shadow: 0 0 20px #00ff41, 0 0 5px #000; background: linear-gradient(45deg, #00ff41, #00FFEf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
         @media (min-width: 768px) { h1 { font-size: 3.5em; } }
         .subtitle { font-size: 1em; color: #00ff41; margin-bottom: 10px; }
         .telegram-badge { display: inline-block; background: #0088cc; color: white; padding: 8px 15px; border-radius: 20px; margin-top: 10px; font-size: 0.9em; }
+        .telegram-user { background: rgba(0, 136, 204, 0.2); border: 2px solid #0088cc; padding: 15px; border-radius: 10px; margin: 15px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .telegram-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #00ff41; }
         .magiceden-btn { display: inline-block; background: linear-gradient(90deg, #00ff41 0%, #111 100%); color: #000; font-weight: bold; border: 2px solid #00ff41; border-radius: 10px; padding: 12px 28px; font-size: 1.1em; text-decoration: none; box-shadow: 0 0 15px #00ff41; transition: 0.2s; margin-top: 18px; }
         .magiceden-btn:hover { background: #00ff41; color: #111; }
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .stat-card { background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 15px; border-radius: 12px; border: 2.5px solid #00ff41; box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset; text-align: center; }
-        .stat-value { font-size: 2em; font-weight: bold; color: #00ff41; text-shadow: 0 0 10px #00ff41; font-family: 'Orbitron', monospace; }
-        .stat-label { font-size: 0.85em; color: #aaa; margin-top: 5px; }
-        .buy-section { background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 25px; border-radius: 20px; border: 2.5px solid #00ff41; margin-bottom: 30px; box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset; }
+        .stat-card { background: #000; padding: 15px; border-radius: 12px; border: 2.5px solid #00ff41; box-shadow: 0 0 20px rgba(0, 255, 65, 0.3), inset 0 0 15px rgba(0, 255, 65, 0.05); text-align: center; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.1), transparent); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; }
+        @keyframes shine { 0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); } 100% { transform: translateX(100%) translateY(100%) rotate(45deg); } }
+        .stat-value { font-size: 2em; font-weight: bold; color: #00ff41; text-shadow: 0 0 15px #00ff41, 0 0 30px rgba(0, 255, 65, 0.5); font-family: 'Orbitron', monospace; position: relative; z-index: 1; }
+        .stat-label { font-size: 0.85em; color: #00ff41; margin-top: 5px; opacity: 0.7; position: relative; z-index: 1; }
+        .buy-section { background: #000; padding: 25px; border-radius: 20px; border: 2.5px solid #00ff41; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0, 255, 65, 0.4), inset 0 0 20px rgba(0, 255, 65, 0.05); position: relative; overflow: hidden; }
+        .buy-section::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: linear-gradient(-45deg, transparent, rgba(0, 255, 65, 0.05), transparent); transform: rotate(-45deg); animation: shine 5s infinite; pointer-events: none; }
         .wallet-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
         button { padding: 15px 30px; font-size: 1.1em; background: linear-gradient(45deg, #00ff41, #00FFEf); color: #000; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 0 20px #00ff41; margin: 5px; width: 100%; font-family: 'Orbitron', sans-serif; }
         button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset; }
@@ -45,15 +51,21 @@
         .success { background: rgba(0, 255, 65, 0.2); border: 2px solid #00ff41; color: #00ff41; }
         .error { background: rgba(255, 0, 0, 0.2); border: 2px solid #ff0000; color: #ff0000; }
         .loading { background: rgba(255, 215, 0, 0.2); border: 2px solid #FFD700; color: #FFD700; }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset; } 50% { box-shadow: 0 0 40px #00ff41, 0 0 20px #222 inset; } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.5), inset 0 0 15px rgba(0, 255, 65, 0.05); border-color: #00ff41; } 50% { box-shadow: 0 0 40px #00ff41, 0 0 20px rgba(0, 255, 65, 0.3), inset 0 0 25px rgba(0, 255, 65, 0.1); border-color: #00FFEf; } }
         .glow-effect { animation: glow 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .stat-card:hover { animation: pulse 0.6s ease-in-out; }
         .variants-section { margin-top: 30px; }
         .variants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
-        .variant-card { background: linear-gradient(120deg, #111 80%, #00ff41 100%); padding: 15px; border-radius: 15px; border: 2.5px solid; text-align: center; font-size: 0.9em; box-shadow: 0 0 10px #00ff41, 0 0 5px #222 inset; }
+        .variant-card { background: #000; padding: 15px; border-radius: 15px; border: 2.5px solid; text-align: center; font-size: 0.9em; box-shadow: 0 0 15px rgba(0, 255, 65, 0.3), inset 0 0 10px rgba(0, 255, 65, 0.05); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .variant-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transition: left 0.5s; }
+        .variant-card:hover::before { left: 100%; }
+        .variant-card:hover { transform: translateY(-5px); box-shadow: 0 5px 25px rgba(0, 255, 65, 0.5), inset 0 0 20px rgba(0, 255, 65, 0.1); }
         .variant-name { font-size: 1em; font-weight: bold; margin-bottom: 8px; }
         .method-badge { display: inline-block; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; margin: 2px; }
         .web3auth-badge { background: #0364ff; }
         .metamask-badge { background: #f6851b; }
+        .telegram-info-badge { background: #0088cc; }
     </style>
 </head>
 <body>
@@ -62,10 +74,6 @@
             <h1>🐸 MONAD FROGS 🐸</h1>
             <p class="subtitle">Matrix Green Edition</p>
             <p style="color: #aaa; font-size: 0.9em;">799 Available | 1000 MON Each</p>
-            <div id="telegramInfo"></div>
-            <div style="margin: 18px 0;">
-                <!-- Telegram Login Widget will render here -->
-            </div>
             <div id="telegramUserInfo"></div>
             <a href="https://magiceden.io/u/LEGO1" target="_blank" class="magiceden-btn">View My NFTs on Magic Eden</a>
         </header>
@@ -117,35 +125,106 @@
         </div>
     </div>
 
-    <!-- Telegram Login Widget -->
-    <script async src="https://telegram.org/js/telegram-widget.js?22"
-        data-telegram-login="MonadFrogsNFT_bot"
-        data-size="large"
-        data-userpic="true"
-        data-request-access="write"
-        data-auth-url="https://00impera.github.io/monad-frogs/auth/telegram"
-        data-lang="en"></script>
-
     <script>
         (function() {
             const SALE_CONTRACT = "0x1a02064d88631C5eFbd93f026944B5AD5adF0f9c";
             const CHAIN_ID = 143, CHAIN_ID_HEX = '0x8f', RPC_URL = "https://rpc.monad.xyz";
             const WEB3AUTH_CLIENT_ID = "BHT1E0utBf7EE5W6ya5N8urmASwrqNUwXOyHFkNamE4xX1fUs3p7SqSE37gBSAEYiN_jJ-D-wc5m1Cw1VX--qZo";
-            let provider, signer, userAddress, web3auth = null, connectionMethod = null, isTelegramWebApp = false, userInfo = null;
+            let provider, signer, userAddress, web3auth = null, connectionMethod = null, isTelegramWebApp = false, telegramUser = null;
             const SALE_ABI = ["function buyNFT() payable", "function buyMultipleNFTs(uint256 count) payable", "function getAvailableCount() view returns (uint256)", "function pricePerNFT() view returns (uint256)"];
+
+            // Initialize Telegram Web App
+            function initTelegram() {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    isTelegramWebApp = true;
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    
+                    // Get Telegram user info
+                    telegramUser = tg.initDataUnsafe.user;
+                    
+                    if (telegramUser) {
+                        const userInfoHtml = `
+                            <div class="telegram-user">
+                                ${telegramUser.photo_url ? `<img src="${telegramUser.photo_url}" class="telegram-avatar" alt="Avatar">` : ''}
+                                <div>
+                                    <div style="font-weight: bold; color: #00ff41;">
+                                        ${telegramUser.first_name} ${telegramUser.last_name || ''}
+                                    </div>
+                                    <div style="font-size: 0.85em; color: #aaa;">
+                                        @${telegramUser.username || 'telegram_user'}
+                                    </div>
+                                    <span class="telegram-badge">📱 Telegram User</span>
+                                </div>
+                            </div>
+                        `;
+                        document.getElementById('telegramUserInfo').innerHTML = userInfoHtml;
+                    }
+                    
+                    // Configure theme colors
+                    tg.setHeaderColor('#000000');
+                    tg.setBackgroundColor('#000000');
+                }
+            }
 
             async function initWeb3Auth() {
                 try {
-                    const { Web3Auth } = window.Web3auth, { CHAIN_NAMESPACES } = window.Web3authBase, { EthereumPrivateKeyProvider } = window.EthereumProvider;
-                    const chainConfig = { chainNamespace: CHAIN_NAMESPACES.EIP155, chainId: CHAIN_ID_HEX, rpcTarget: RPC_URL, displayName: "Monad", blockExplorerUrl: "https://explorer.monad.xyz", ticker: "MON", tickerName: "Monad", logo: "https://00impera.github.io/monad-frogs/logo.png" };
-                    const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
-                    web3auth = new Web3Auth({ clientId: WEB3AUTH_CLIENT_ID, web3AuthNetwork: "sapphire_mainnet", chainConfig, privateKeyProvider, uiConfig: { appName: "Monad Frogs NFT", theme: { primary: "#00ff41" }, mode: "dark", logoLight: "https://00impera.github.io/monad-frogs/logo.png", logoDark: "https://00impera.github.io/monad-frogs/logo.png", defaultLanguage: "en", loginMethodsOrder: ["google", "twitter", "discord", "facebook"] } });
+                    // Check if Web3Auth libraries are loaded
+                    if (!window.Web3auth || !window.Web3authBase || !window.OpenloginAdapter) {
+                        console.log('Web3Auth libraries not loaded, disabling social login');
+                        const btn = document.getElementById('socialLoginBtn');
+                        btn.disabled = true;
+                        btn.querySelector('div').textContent = 'Unavailable in this browser';
+                        return;
+                    }
+
+                    const { Web3Auth } = window.Web3auth;
+                    const { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } = window.Web3authBase;
+                    const { OpenloginAdapter } = window.OpenloginAdapter;
+                    
+                    const chainConfig = { 
+                        chainNamespace: CHAIN_NAMESPACES.EIP155, 
+                        chainId: CHAIN_ID_HEX, 
+                        rpcTarget: RPC_URL, 
+                        displayName: "Monad", 
+                        blockExplorerUrl: "https://explorer.monad.xyz", 
+                        ticker: "MON", 
+                        tickerName: "Monad"
+                    };
+                    
+                    web3auth = new Web3Auth({ 
+                        clientId: WEB3AUTH_CLIENT_ID, 
+                        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+                        chainConfig,
+                        uiConfig: { 
+                            appName: "Monad Frogs NFT", 
+                            theme: { primary: "#00ff41" }, 
+                            mode: "dark",
+                            defaultLanguage: "en",
+                            loginMethodsOrder: ["google", "twitter", "discord", "facebook"]
+                        } 
+                    });
+
+                    const openloginAdapter = new OpenloginAdapter({
+                        adapterSettings: {
+                            network: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+                            uxMode: "popup"
+                        }
+                    });
+                    web3auth.configureAdapter(openloginAdapter);
+                    
                     await web3auth.initModal();
                     const btn = document.getElementById('socialLoginBtn');
                     btn.disabled = false;
                     btn.querySelector('div').textContent = 'Google, Twitter, Discord & More';
                     if (web3auth.connected) await handleWeb3AuthConnection();
-                } catch (e) { console.error('Web3Auth init:', e); showStatus('⚠️ Social login unavailable', 'error'); }
+                } catch (e) { 
+                    console.error('Web3Auth init:', e); 
+                    const btn = document.getElementById('socialLoginBtn');
+                    btn.disabled = true;
+                    btn.querySelector('div').textContent = 'Setup Error';
+                }
             }
 
             async function connectWeb3Auth() {
@@ -164,8 +243,8 @@
                     signer = provider.getSigner();
                     userAddress = await signer.getAddress();
                     connectionMethod = 'web3auth';
-                    userInfo = await web3auth.getUserInfo();
-                    updateUIAfterConnection();
+                    const userInfo = await web3auth.getUserInfo();
+                    updateUIAfterConnection(userInfo);
                     showStatus('✅ Connected via ' + (userInfo.name || 'Social Login'), 'success');
                     await updateDashboard();
                 } catch (e) { console.error('Handle connection:', e); showStatus('❌ Connection failed', 'error'); }
@@ -182,34 +261,43 @@
                     signer = provider.getSigner();
                     userAddress = await signer.getAddress();
                     connectionMethod = 'metamask';
-                    updateUIAfterConnection();
+                    updateUIAfterConnection(null);
                     showStatus('✅ MetaMask connected!', 'success');
                     await updateDashboard();
                 } catch (e) { console.error('MetaMask:', e); handleError(e, 'connect'); }
             }
 
-            function updateUIAfterConnection() {
+            function updateUIAfterConnection(userInfo) {
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('walletInfo').style.display = 'block';
                 document.getElementById('buyControls').style.display = 'flex';
                 document.getElementById('walletAddress').textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+                
                 let html = '';
                 if (connectionMethod === 'web3auth' && userInfo) {
                     html = `<div style="display: flex; align-items: center; justify-content: center; gap: 10px;">${userInfo.profileImage ? `<img src="${userInfo.profileImage}" style="width: 40px; height: 40px; border-radius: 50%;">` : ''}<div><div><strong>${userInfo.name || 'User'}</strong></div><div style="font-size: 0.8em; color: #aaa;">${userInfo.email || ''}</div></div></div>`;
                     document.getElementById('methodBadge').className = 'method-badge web3auth-badge';
                     document.getElementById('methodBadge').textContent = '🌐 Social Login';
-                } else {
-                    html = '<div><strong>Connected</strong></div>';
+                } else if (connectionMethod === 'metamask') {
+                    html = '<div><strong>Connected with MetaMask</strong></div>';
                     document.getElementById('methodBadge').className = 'method-badge metamask-badge';
                     document.getElementById('methodBadge').textContent = '🦊 MetaMask';
                 }
+                
+                // Add Telegram info if available
+                if (telegramUser) {
+                    html += `<div style="margin-top: 10px; font-size: 0.85em; color: #0088cc;">
+                        <span class="method-badge telegram-info-badge">📱 ${telegramUser.first_name}</span>
+                    </div>`;
+                }
+                
                 document.getElementById('userInfoDisplay').innerHTML = html;
             }
 
             async function disconnect() {
                 try {
                     if (connectionMethod === 'web3auth' && web3auth && web3auth.connected) await web3auth.logout();
-                    provider = signer = userAddress = connectionMethod = userInfo = null;
+                    provider = signer = userAddress = connectionMethod = null;
                     document.getElementById('loginSection').style.display = 'block';
                     document.getElementById('walletInfo').style.display = 'none';
                     document.getElementById('buyControls').style.display = 'none';
@@ -286,13 +374,7 @@
             window.updatePrice = updatePrice;
 
             window.addEventListener('load', async () => {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    isTelegramWebApp = true;
-                    const tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
-                    document.getElementById('telegramInfo').innerHTML = '<span class="telegram-badge">📱 Telegram App</span>';
-                }
+                initTelegram();
                 await initWeb3Auth();
                 updateDashboard();
                 setInterval(updateDashboard, 30000);

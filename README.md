@@ -1,2 +1,0 @@
-# monad-frogs
-monad-frogs

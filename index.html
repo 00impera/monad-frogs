@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monad Frogs NFT Collection</title>
+    <!-- Orbitron font for mechanic/tech look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@web3auth/modal@8.0.0/dist/modal.umd.min.js"></script>
@@ -17,12 +19,13 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #0a3d0a 50%, #00ff41 100%);
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #0a3d0a 60%, #00ff41 100%);
             min-height: 100vh;
-            color: #fff;
+            color: #00ff41;
             padding: 10px;
             padding-bottom: 80px;
+            letter-spacing: 0.5px;
         }
 
         .container {
@@ -33,20 +36,23 @@
         header {
             text-align: center;
             margin-bottom: 20px;
-            background: rgba(0, 255, 65, 0.1);
+            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
             padding: 20px;
             border-radius: 20px;
-            border: 2px solid #00ff41;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            border: 2.5px solid #00ff41;
+            box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset;
+            position: relative;
         }
 
         h1 {
             font-size: 2em;
             margin-bottom: 10px;
-            text-shadow: 0 0 20px #00ff41;
+            text-shadow: 0 0 20px #00ff41, 0 0 5px #000;
             background: linear-gradient(45deg, #00ff41, #00FFEf);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            letter-spacing: 2px;
         }
 
         @media (min-width: 768px) {
@@ -57,6 +63,7 @@
             font-size: 1em;
             color: #00ff41;
             margin-bottom: 10px;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .telegram-badge {
@@ -69,6 +76,25 @@
             font-size: 0.9em;
         }
 
+        .magiceden-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #00ff41 0%, #111 100%);
+            color: #000;
+            font-weight: bold;
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 12px 28px;
+            font-size: 1.1em;
+            text-decoration: none;
+            box-shadow: 0 0 15px #00ff41;
+            transition: background 0.2s, color 0.2s;
+            margin-top: 18px;
+        }
+        .magiceden-btn:hover {
+            background: #00ff41;
+            color: #111;
+        }
+
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -77,34 +103,36 @@
         }
 
         .stat-card {
-            background: rgba(0, 255, 65, 0.15);
+            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
             padding: 15px;
-            border-radius: 15px;
-            border: 2px solid #00ff41;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            border-radius: 12px;
+            border: 2.5px solid #00ff41;
+            box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 1.8em;
+            font-size: 2em;
             font-weight: bold;
             color: #00ff41;
-            text-shadow: 0 0 10px #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 2px #000;
+            font-family: 'Orbitron', monospace;
         }
 
         .stat-label {
             font-size: 0.85em;
             color: #aaa;
             margin-top: 5px;
+            font-family: 'Orbitron', monospace;
         }
 
         .buy-section {
-            background: rgba(0, 255, 65, 0.1);
+            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
             padding: 25px;
             border-radius: 20px;
-            border: 2px solid #00ff41;
+            border: 2.5px solid #00ff41;
             margin-bottom: 30px;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset;
         }
 
         .wallet-options {
@@ -124,14 +152,15 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            box-shadow: 0 0 20px #00ff41;
             margin: 5px;
             width: 100%;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         button:hover:not(:disabled) {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+            box-shadow: 0 0 30px #00ff41, 0 0 10px #222 inset;
         }
 
         button:disabled {
@@ -166,6 +195,7 @@
             padding: 10px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 10px;
+            border: 1.5px solid #00ff41;
         }
 
         .user-info {
@@ -173,7 +203,7 @@
             padding: 15px;
             border-radius: 10px;
             margin: 10px 0;
-            border: 1px solid #00ff41;
+            border: 1.5px solid #00ff41;
         }
 
         .buy-controls {
@@ -202,12 +232,14 @@
             background: rgba(0, 255, 65, 0.1);
             color: #00ff41;
             text-align: center;
+            font-family: 'Orbitron', monospace;
         }
 
         .price-display {
             font-size: 1.3em;
             color: #00ff41;
             text-shadow: 0 0 10px #00ff41;
+            font-family: 'Orbitron', monospace;
         }
 
         .status-message {
@@ -216,6 +248,7 @@
             border-radius: 10px;
             text-align: center;
             font-weight: bold;
+            font-family: 'Orbitron', monospace;
         }
 
         .success {
@@ -237,8 +270,8 @@
         }
 
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.6); }
+            0%, 100% { box-shadow: 0 0 20px #00ff41, 0 0 10px #222 inset; }
+            50% { box-shadow: 0 0 40px #00ff41, 0 0 20px #222 inset; }
         }
 
         .glow-effect {
@@ -257,18 +290,20 @@
         }
 
         .variant-card {
-            background: rgba(0, 0, 0, 0.5);
+            background: linear-gradient(120deg, #111 80%, #00ff41 100%);
             padding: 15px;
             border-radius: 15px;
-            border: 2px solid;
+            border: 2.5px solid;
             text-align: center;
             font-size: 0.9em;
+            box-shadow: 0 0 10px #00ff41, 0 0 5px #222 inset;
         }
 
         .variant-name {
             font-size: 1em;
             font-weight: bold;
             margin-bottom: 8px;
+            font-family: 'Orbitron', monospace;
         }
 
         .login-methods {
@@ -302,6 +337,12 @@
             <p class="subtitle">Matrix Green Edition</p>
             <p style="color: #aaa; font-size: 0.9em;">799 Available | 1000 MON Each</p>
             <div id="telegramInfo"></div>
+            <div>
+                <a href="https://magiceden.io/u/LEGO1" target="_blank" class="magiceden-btn">
+                    <img src="https://magiceden.io/static/media/logo.7c6b6e2e.svg" alt="Magic Eden" style="height:24px;vertical-align:middle;margin-right:8px;">
+                    View My NFTs on Magic Eden
+                </a>
+            </div>
         </header>
 
         <div class="dashboard">
@@ -324,7 +365,7 @@
         </div>
 
         <div class="buy-section">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41;">💰 Connect & Buy</h2>
+            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41; font-family: 'Orbitron', monospace;">💰 Connect & Buy</h2>
             
             <div class="wallet-section">
                 <div id="loginSection">
@@ -365,7 +406,7 @@
         </div>
 
         <div class="variants-section">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41;">🎨 Frog Variants</h2>
+            <h2 style="text-align: center; margin-bottom: 20px; color: #00ff41; font-family: 'Orbitron', monospace;">🎨 Frog Variants</h2>
             <div class="variants-grid">
                 <div class="variant-card" style="border-color: #00FFEF;">
                     <div class="variant-name" style="color: #00FFEF;">Electric Cyan</div>
